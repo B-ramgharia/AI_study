@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Study Buddy Pro - Live Platform & Overview</title>
+  <meta name="description" content="AI-Powered Study Buddy Pro: Your intelligent learning companion featuring SM-2 Spaced Repetition, Feynman Technique, Study RPG, Mind Maps, and Gemini AI integration." />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  
+  <!-- Mermaid.js for Mindmaps -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <style>
+    :root {
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-card: rgba(17, 24, 39, 0.7);
+      --border-color: rgba(255, 255, 255, 0.1);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-cyan: #00f2fe;
+      --accent-blue: #4facfe;
+      --accent-purple: #8b5cf6;
+      --accent-pink: #ec4899;
+      --gradient-main: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #8b5cf6 100%);
+      --gradient-card: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+      --radius: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .brand-font {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* Glow Background Orbs */
+    .glow-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.35;
+    }
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: #00f2fe;
+      top: -100px;
+      left: -100px;
+    }
+    .orb-2 {
+      width: 500px;
+      height: 500px;
+      background: #8b5cf6;
+      top: 400px;
+      right: -150px;
+    }
+
+    /* Header & Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(11, 15, 25, 0.8);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+    }
+
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--gradient-main);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-cyan);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--gradient-main);
+      color: #000;
+      box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(0, 242, 254, 0.5);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent-cyan);
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.4rem 1rem;
+      border-radius: 30px;
+      background: rgba(0, 242, 254, 0.1);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      color: var(--accent-cyan);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(180deg, #ffffff 0%, #9ca3af 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero h1 span {
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    /* Info Banner / Alert */
+    .deployment-banner {
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      padding: 1.25rem 1.5rem;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      text-align: left;
+    }
+
+    .deployment-banner .info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .deployment-banner i {
+      font-size: 1.8rem;
+      color: var(--accent-purple);
+    }
+
+    /* Live Feature Interactive Demo Showcase */
+    .demo-container {
+      max-width: 1280px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .feature-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background: rgba(0, 242, 254, 0.15);
+      border-color: var(--accent-cyan);
+      color: #fff;
+    }
+
+    .demo-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 2.5rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      min-height: 420px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Flashcard Interactive Simulator */
+    .flashcard-box {
+      max-width: 550px;
+      margin: 0 auto;
+      perspective: 1000px;
+    }
+
+    .flashcard-inner {
+      background: var(--gradient-card);
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 20px;
+      padding: 2.5rem;
+      text-align: center;
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .flashcard-topic {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-cyan);
+      margin-bottom: 0.8rem;
+    }
+
+    .sm2-ratings {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .rate-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    .rate-again { background: #ef4444; }
+    .rate-hard { background: #f59e0b; }
+    .rate-good { background: #10b981; }
+    .rate-easy { background: #3b82f6; }
+
+    /* Features Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      max-width: 1280px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0, 242, 254, 0.4);
+      box-shadow: 0 12px 30px rgba(0, 242, 254, 0.15);
+    }
+
+    .card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      background: rgba(0, 242, 254, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: var(--accent-cyan);
+      margin-bottom: 1.25rem;
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Screenshots Gallery */
+    .gallery-container {
+      max-width: 1280px;
+      margin: 0 auto 6rem;
+      padding: 0 2rem;
+    }
+
+    .screenshot-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .screenshot-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      background: var(--bg-secondary);
+      transition: var(--transition);
+    }
+
+    .screenshot-card:hover {
+      transform: scale(1.02);
+      border-color: var(--accent-cyan);
+    }
+
+    .screenshot-card img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .screenshot-info {
+      padding: 1rem 1.25rem;
+    }
+
+    .screenshot-info h4 {
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .screenshot-info p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      background: var(--bg-secondary);
+    }
+
+    footer a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <div class="logo-icon">🎓</div>
+        <span>AI Study Buddy <span style="color: var(--accent-cyan);">Pro</span></span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#demo">Live Demo</a></li>
+        <li><a href="#screenshots">Screenshots</a></li>
+        <li><a href="https://github.com/B-ramgharia/AI_study" target="_blank"><i class="fab fa-github"></i> GitHub</a></li>
+      </ul>
+      <a href="https://share.streamlit.io/" target="_blank" class="btn btn-primary">
+        <i class="fas fa-rocket"></i> Launch Streamlit App
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="badge">
+      <i class="fas fa-sparkles"></i> Powered by Gemini 1.5 Flash & SM-2 Spaced Repetition
+    </div>
+    <h1>Master Any Subject with <span>AI-Powered</span> Study Tools</h1>
+    <p>An all-in-one intelligent learning companion featuring AI Notes Generation, Feynman Technique, Debate Mode, Mind Maps, RPG Boss Battles, and SM-2 Spaced Repetition Flashcards.</p>
+
+    <div class="hero-buttons">
+      <a href="#demo" class="btn btn-primary">
+        <i class="fas fa-play"></i> Try Interactive Demo
+      </a>
+      <a href="https://github.com/B-ramgharia/AI_study" target="_blank" class="btn btn-outline">
+        <i class="fab fa-github"></i> View GitHub Repository
+      </a>
+    </div>
+
+    <!-- Deployment Status Info Banner -->
+    <div class="deployment-banner">
+      <div class="info">
+        <i class="fas fa-info-circle"></i>
+        <div>
+          <strong>Running the Python Streamlit App Live</strong>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">
+            This Streamlit app runs in Python. Deploy it free on Streamlit Cloud in 1 minute by connecting repository <code>B-ramgharia/AI_study</code> with main file <code>app.py</code>!
+          </p>
+        </div>
+      </div>
+      <a href="https://share.streamlit.io/" target="_blank" class="btn btn-outline" style="white-space: nowrap;">
+        Deploy on Streamlit Cloud
+      </a>
+    </div>
+  </section>
+
+  <!-- Interactive Demo Section -->
+  <section class="demo-container" id="demo">
+    <div class="section-title">
+      <h2>Experience AI Study Buddy</h2>
+      <p>Explore interactive previews of the core features right here.</p>
+    </div>
+
+    <div class="feature-tabs">
+      <button class="tab-btn active" onclick="openTab(event, 'flashcards')">⚡ Spaced Repetition (SM-2)</button>
+      <button class="tab-btn" onclick="openTab(event, 'feynman')">🧑‍🏫 Feynman Mode</button>
+      <button class="tab-btn" onclick="openTab(event, 'mindmap')">🧠 Mind Map Generator</button>
+      <button class="tab-btn" onclick="openTab(event, 'rpg')">🎮 Study RPG Boss Battle</button>
+    </div>
+
+    <div class="demo-card">
+      <!-- Flashcard Tab -->
+      <div id="flashcards" class="tab-content active">
+        <h3 style="text-align: center; margin-bottom: 1rem;">SM-2 Spaced Repetition Flashcards</h3>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
+          Algorithms automatically adjust review intervals based on your recall rating.
+        </p>
+
+        <div class="flashcard-box">
+          <div class="flashcard-inner">
+            <div class="flashcard-topic" id="cardTopic">Topic: SM-2 Algorithm</div>
+            <h4 id="cardQuestion" style="font-size: 1.2rem; margin-bottom: 1rem;">What is the SuperMemo-2 (SM-2) Spaced Repetition Algorithm?</h4>
+            <div id="cardAnswer" style="display: none; font-size: 0.95rem; color: #a7f3d0; margin-bottom: 1.5rem;">
+              SM-2 calculates optimal review intervals using performance ratings (Again, Hard, Good, Easy) and an Ease Factor (EF) multiplier.
+            </div>
+            <button class="btn btn-outline" id="flipBtn" onclick="toggleAnswer()">Show Answer 👁️</button>
+          </div>
+
+          <div class="sm2-ratings" id="ratingButtons" style="display: none;">
+            <button class="rate-btn rate-again" onclick="rateCard(1)">🔴 Again (1d)</button>
+            <button class="rate-btn rate-hard" onclick="rateCard(3)">🟠 Hard (3d)</button>
+            <button class="rate-btn rate-good" onclick="rateCard(4)">🟢 Good (6d)</button>
+            <button class="rate-btn rate-easy" onclick="rateCard(5)">🔵 Easy (10d)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feynman Tab -->
+      <div id="feynman" class="tab-content">
+        <h3 style="text-align: center; margin-bottom: 1rem;">Feynman Technique Evaluation</h3>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 1.5rem;">
+          Teach a complex concept in simple terms. The AI identifies gaps and rates your clarity.
+        </p>
+
+        <div style="max-width: 650px; margin: 0 auto; background: rgba(255,255,255,0.02); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Topic to Explain:</label>
+          <input type="text" value="Quantum Superposition" readonly style="width: 100%; padding: 0.6rem; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: #fff; margin-bottom: 1rem;" />
+          
+          <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Your Simple Explanation:</label>
+          <textarea style="width: 100%; height: 90px; padding: 0.6rem; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: #fff; margin-bottom: 1rem;" readonly>Imagine a spinning coin. While spinning, it's both heads and tails at once until it falls down!</textarea>
+
+          <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; padding: 1rem; border-radius: 10px; font-size: 0.9rem;">
+            <strong>🎯 AI Feedback (Clarity Score: 95/100):</strong><br/>
+            Excellent analogy! You clearly conveyed how a quantum state remains in multiple probabilities until measurement collapse occurs.
+          </div>
+        </div>
+      </div>
+
+      <!-- Mindmap Tab -->
+      <div id="mindmap" class="tab-content">
+        <h3 style="text-align: center; margin-bottom: 1rem;">Automated Mind Map Generator</h3>
+        <div style="max-width: 700px; margin: 0 auto;">
+          <pre class="mermaid">
+          mindmap
+            root((AI Study Buddy))
+              (AI Notes)
+                Summarizer
+                Key Takeaways
+              (Spaced Repetition)
+                SM2 Algorithm
+                Forgetting Curve
+              (Gamification)
+                Study RPG
+                Boss Battles
+                Badges & XP
+          </pre>
+        </div>
+      </div>
+
+      <!-- RPG Tab -->
+      <div id="rpg" class="tab-content">
+        <h3 style="text-align: center; margin-bottom: 1rem;">Gamified Study RPG & Boss Battles</h3>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
+          Turn course syllabi into interactive questlines with Boss Overlords and XP rewards.
+        </p>
+
+        <div style="max-width: 600px; margin: 0 auto; background: linear-gradient(135deg, rgba(236,72,153,0.1), rgba(139,92,246,0.1)); padding: 2rem; border-radius: 16px; border: 1px solid var(--accent-purple); text-align: center;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem;">👾</div>
+          <h4 style="font-size: 1.4rem; color: var(--accent-pink);">Level 1 Boss: Overlord Syntacticus</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">Defeat the Boss by correctly solving 3 concept challenges to unlock Unit 2!</p>
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 0.8rem 1.2rem; border-radius: 10px; font-weight: 600;">
+            <span>⚡ XP: 350 / 500</span>
+            <span>🛡️ Boss HP: 60%</span>
+            <span>🏆 Badge: Novice Scholar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features Grid -->
+  <section class="grid" id="features">
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-brain"></i></div>
+      <h3>SM-2 Spaced Repetition</h3>
+      <p>Uses the Ebbinghaus Forgetting Curve and SM-2 algorithm to dynamically schedule reviews and prevent memory decay.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+      <h3>Feynman Learning Mode</h3>
+      <p>Test deep understanding by teaching concepts in simple terms while Gemini AI evaluates clarity and highlights gaps.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-gamepad"></i></div>
+      <h3>Study RPG Campaign</h3>
+      <p>Converts syllabi into RPG questlines featuring Unit Bosses, XP rewards, and collectible badges to maximize motivation.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-sitemap"></i></div>
+      <h3>Mermaid Mind Maps</h3>
+      <p>Generate visual knowledge mind maps from notes and PDF documents rendered in real-time with Mermaid.js.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-comments"></i></div>
+      <h3>AI Debate Mode</h3>
+      <p>Sharpen critical thinking by engaging in structured counter-arguments with an AI debating opponent.</p>
+    </div>
+
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-heart-pulse"></i></div>
+      <h3>Mood & Burnout Tracker</h3>
+      <p>Track study stress and mental well-being to receive personalized encouragement and study pacing suggestions.</p>
+    </div>
+  </section>
+
+  <!-- Screenshots Gallery -->
+  <section class="gallery-container" id="screenshots">
+    <div class="section-title">
+      <h2>Application Interface</h2>
+      <p>Visual preview of AI Study Buddy Pro in action.</p>
+    </div>
+
+    <div class="screenshot-grid">
+      <div class="screenshot-card">
+        <img src="ai_study_dark.png" alt="Dark Mode UI" />
+        <div class="screenshot-info">
+          <h4>Sleek Dark Theme</h4>
+          <p>Modern glassmorphic interface designed for late-night study sessions.</p>
+        </div>
+      </div>
+
+      <div class="screenshot-card">
+        <img src="ai_study_light.png" alt="Light Mode UI" />
+        <div class="screenshot-info">
+          <h4>Clean Light Theme</h4>
+          <p>High-contrast, distraction-free environment for daytime learning.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 AI Study Buddy Pro. Created by <a href="https://github.com/B-ramgharia" target="_blank">B-ramgharia</a>.</p>
+    <p style="margin-top: 0.5rem; font-size: 0.85rem;">Powered by Streamlit & Gemini 1.5 Flash AI.</p>
+  </footer>
+
+  <script>
+    // Tab switching logic
+    function openTab(evt, tabName) {
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(c => c.classList.remove('active'));
+
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(b => b.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      evt.currentTarget.classList.add('active');
+
+      if (tabName === 'mindmap') {
+        mermaid.contentLoaded();
+      }
+    }
+
+    // Flashcard interactive demo
+    function toggleAnswer() {
+      const ans = document.getElementById('cardAnswer');
+      const ratings = document.getElementById('ratingButtons');
+      const btn = document.getElementById('flipBtn');
+
+      if (ans.style.display === 'none') {
+        ans.style.display = 'block';
+        ratings.style.display = 'flex';
+        btn.style.display = 'none';
+      }
+    }
+
+    function rateCard(quality) {
+      alert('Card rating recorded (' + quality + ')! Interval updated with SM-2 Spaced Repetition algorithm.');
+      document.getElementById('cardAnswer').style.display = 'none';
+      document.getElementById('ratingButtons').style.display = 'none';
+      document.getElementById('flipBtn').style.display = 'inline-block';
+    }
+
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+  </script>
+</body>
+</html>
