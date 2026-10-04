@@ -30,6 +30,11 @@ st.set_page_config(
 load_dotenv()
 
 API_KEY = os.getenv("GEMINI_API_KEY")
+if not API_KEY:
+    try:
+        API_KEY = st.secrets.get("GEMINI_API_KEY")
+    except Exception:
+        API_KEY = None
 
 
 # =========================================================
@@ -928,7 +933,7 @@ if client is None:
 
     st.error(
         "Gemini API key not found. "
-        "Please add GEMINI_API_KEY in your .env file."
+        "Please add GEMINI_API_KEY in your .env file (for local testing) or in Streamlit Cloud Secrets / Environment Variables."
     )
 
     st.stop()
