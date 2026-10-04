@@ -8,7 +8,14 @@ import re
 import base64
 import streamlit as st
 import streamlit.components.v1 as components
-from gtts import gTTS
+
+# Safe import for gTTS with browser SpeechSynthesis fallback
+try:
+    from gtts import gTTS
+    HAS_GTTS = True
+except ImportError:
+    HAS_GTTS = False
+    gTTS = None
 
 
 def clean_text_for_speech(text: str) -> str:
@@ -29,22 +36,36 @@ def clean_text_for_speech(text: str) -> str:
 
 def speak(text: str, lang: str = "en", autoplay: bool = True, key: str = None):
     """
-    Converts text into spoken audio using gTTS and plays it directly in Streamlit.
+    Converts text into spoken audio using gTTS or browser speech synthesis.
     """
     clean_str = clean_text_for_speech(text)
     if not clean_str:
         return
 
-    try:
-        tts = gTTS(text=clean_str, lang=lang, slow=False)
-        fp = io.BytesIO()
-        tts.write_to_fp(fp)
-        fp.seek(0)
-        audio_bytes = fp.read()
-        
-        st.audio(audio_bytes, format="audio/mp3", autoplay=autoplay)
-    except Exception as e:
-        st.caption(f"🎙️ Voice assistant output unavailable: {e}")
+    if HAS_GTTS:
+        try:
+            tts = gTTS(text=clean_str, lang=lang, slow=False)
+            fp = io.BytesIO()
+            tts.write_to_fp(fp)
+            fp.seek(0)
+            audio_bytes = fp.read()
+            st.audio(audio_bytes, format="audio/mp3", autoplay=autoplay)
+            return
+        except Exception as e:
+            st.caption(f"🎙️ gTTS audio notice: {e}")
+
+    # Fallback to Browser SpeechSynthesis (zero Python dependencies required)
+    js_escaped = clean_str.replace("\\", "\\\\").replace("'", "\\'").replace("\n", " ")
+    components.html(f"""
+    <script>
+    if ('speechSynthesis' in window) {{
+        window.speechSynthesis.cancel();
+        const msg = new SpeechSynthesisUtterance('{js_escaped}');
+        msg.rate = 1.0;
+        window.speechSynthesis.speak(msg);
+    }}
+    </script>
+    """, height=0)
 
 
 def transcribe_audio_bytes(audio_bytes, client=None, mime_type="audio/wav") -> str:
