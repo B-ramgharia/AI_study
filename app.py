@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import base64
 import math
 import json
+import voice_assistant as va
 
 
 
@@ -53,6 +54,9 @@ else:
 
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
+
+if "enable_voice_output" not in st.session_state:
+    st.session_state.enable_voice_output = True
 
 if "history" not in st.session_state:
     st.session_state.history = []
@@ -920,6 +924,14 @@ with st.sidebar:
 
     st.divider()
 
+    st.session_state.enable_voice_output = st.checkbox(
+        "🎙️ Enable Voice Assistant (Read Aloud)",
+        value=st.session_state.enable_voice_output,
+        help="Reads AI responses and explanations out loud using text-to-speech."
+    )
+
+    st.divider()
+
     if st.button("🚪 Logout", use_container_width=True):
         st.session_state.logged_in = False
         st.rerun()
@@ -1243,8 +1255,12 @@ elif menu == "📚 Generate Notes":
 
     st.header("📚 AI Notes Generator")
 
+    v_notes = va.render_voice_input("notes", client=client)
+    va.render_browser_voice_dictation_btn("🎙️ Speak Notes Topic", "notes_input")
+
     topic = st.text_input(
         "Enter topic",
+        value=v_notes if v_notes else "",
         placeholder="Example: Machine Learning"
     )
 
@@ -1313,6 +1329,10 @@ elif menu == "📚 Generate Notes":
 
             st.markdown(result)
 
+            if st.session_state.get("enable_voice_output", True):
+                st.caption("🔊 **Voice Assistant Reading Aloud:**")
+                va.speak(result)
+
             st.download_button(
                 "⬇️ Download Notes",
                 data=result,
@@ -1334,8 +1354,12 @@ elif menu == "💡 Explain Topic":
 
     st.header("💡 AI Topic Explainer")
 
+    v_explain = va.render_voice_input("explain", client=client)
+    va.render_browser_voice_dictation_btn("🎙️ Speak Topic to Explain", "explain_input")
+
     topic = st.text_input(
         "What do you want to understand?",
+        value=v_explain if v_explain else "",
         placeholder="Example: Neural Networks"
     )
 
@@ -1392,6 +1416,10 @@ elif menu == "💡 Explain Topic":
             st.subheader("🧠 Explanation")
 
             st.markdown(result)
+
+            if st.session_state.get("enable_voice_output", True):
+                st.caption("🔊 **Voice Assistant Reading Aloud:**")
+                va.speak(result)
 
         else:
 
@@ -2524,6 +2552,9 @@ elif menu == "🧑‍🏫 Feynman Mode":
     st.header("🧑‍🏫 Feynman Mode: Teach the AI")
     st.caption("Master complex topics by explaining them in your own words! The AI plays a curious, confused beginner who asks follow-up questions and evaluates your explanation.")
 
+    v_fey = va.render_voice_input("feynman", client=client, label="🎙️ Record your Voice Explanation")
+    va.render_browser_voice_dictation_btn("🎙️ Dictate Explanation into Box", "fey_explanation_text")
+
     fey_col1, fey_col2 = st.columns([3, 2])
 
     with fey_col1:
@@ -2535,6 +2566,7 @@ elif menu == "🧑‍🏫 Feynman Mode":
         )
         fey_explanation = st.text_area(
             "Explain the topic in your own words (Use simple language & analogies!):",
+            value=v_fey if v_fey else "",
             height=200,
             placeholder="Explain it as if speaking to someone with no background in the subject...",
             key="fey_explanation_text"
@@ -2595,6 +2627,9 @@ elif menu == "🧑‍🏫 Feynman Mode":
             {st.session_state.feynman_eval}
         </div>
         """, unsafe_allow_html=True)
+        if st.session_state.get("enable_voice_output", True):
+            st.caption("🔊 **Voice Assistant Reading Evaluation:**")
+            va.speak(st.session_state.feynman_eval)
 
 
 # =========================================================
